@@ -403,6 +403,299 @@ and enhance customer experience.</p></div></div><div class="framer-94awl0" data-
   obs.observe(document.querySelector('title') || document.head, { subtree: true, childList: true, characterData: true });
 })();
 </script>
+
+<!-- NBS SURVEY START -->
+<section id="nbs-survey" style="background:#060612;padding:100px 0;font-family:'Inter Tight',sans-serif;">
+  <div style="max-width:800px;margin:0 auto;padding:0 40px;">
+    <div style="margin-bottom:56px;">
+      <p style="font-size:12px;font-weight:700;letter-spacing:0.1em;color:#ffbd59;text-transform:uppercase;margin:0 0 16px;">Package Builder</p>
+      <h2 style="font-size:52px;font-weight:500;letter-spacing:-0.03em;line-height:1.1em;color:#fff;margin:0 0 16px;">Customize your <em style="font-style:italic;color:#ffbd59;">package</em></h2>
+      <p style="font-size:16px;line-height:1.65;color:rgba(255,255,255,0.5);margin:0;max-width:520px;">Answer 7 quick questions and we'll suggest the right mix of services for your business.</p>
+    </div>
+
+    <!-- Progress bar -->
+    <div id="nbs-progress-wrap" style="margin-bottom:40px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span id="nbs-step-label" style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:0.02em;"></span>
+        <span id="nbs-step-pct" style="font-size:13px;font-weight:700;color:#ffbd59;"></span>
+      </div>
+      <div style="height:3px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;">
+        <div id="nbs-progress-bar" style="height:100%;background:#ffbd59;border-radius:100px;transition:width 0.4s ease;width:0%;"></div>
+      </div>
+    </div>
+
+    <!-- Steps container -->
+    <div id="nbs-steps"></div>
+
+    <!-- Results -->
+    <div id="nbs-results" style="display:none;">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:48px;">
+        <p style="font-size:12px;font-weight:700;letter-spacing:0.1em;color:#ffbd59;text-transform:uppercase;margin:0 0 12px;">Your Recommended Package</p>
+        <h3 id="nbs-pkg-name" style="font-size:40px;font-weight:800;color:#fff;margin:0 0 12px;letter-spacing:-0.03em;"></h3>
+        <p id="nbs-pkg-desc" style="font-size:16px;line-height:1.65;color:rgba(255,255,255,0.55);margin:0 0 36px;max-width:560px;"></p>
+
+        <p style="font-size:13px;font-weight:700;letter-spacing:0.05em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin:0 0 14px;">Included services — tap to add or remove</p>
+        <div id="nbs-pkg-services" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:40px;"></div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
+          <a id="nbs-wa-btn" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#ffbd59;color:#060612;font-size:15px;font-weight:700;padding:14px 28px;border-radius:10px;text-decoration:none;transition:opacity 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#060612"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Discuss my package
+          </a>
+          <button onclick="nbsSurveyReset()" style="background:none;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:14px;font-weight:600;padding:14px 24px;border-radius:10px;cursor:pointer;font-family:'Inter Tight',sans-serif;transition:all 0.2s;">Start over</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var steps = [
+    {
+      id:'goals',
+      label:'Business & Goals',
+      q:'What best describes your primary business goal right now?',
+      type:'single',
+      options:['Launch or rebrand my business','Grow online sales / leads','Automate operations & save time','Build credibility & brand awareness','Scale an existing digital product']
+    },
+    {
+      id:'audience',
+      label:'Target Audience',
+      q:'Who is your primary target audience?',
+      type:'single',
+      options:['Consumers (B2C)','Other businesses (B2B)','Government / NGOs','Mixed audience']
+    },
+    {
+      id:'brand',
+      label:'Brand & Positioning',
+      q:'How would you describe your current brand situation?',
+      type:'single',
+      options:['No brand yet — starting from scratch','Have a logo, need the full identity','Have branding, just need digital execution','Established brand, ready to scale']
+    },
+    {
+      id:'platform',
+      label:'Website / Platform',
+      q:'What kind of digital platform does your business need?',
+      type:'multi',
+      hint:'Select all that apply',
+      options:['Informational website','E-commerce store','Online booking / scheduling','Customer portal / CRM','Mobile app','None yet — not sure']
+    },
+    {
+      id:'ai',
+      label:'AI & Automation',
+      q:'Which AI or automation capabilities interest you?',
+      type:'multi',
+      hint:'Select all that apply',
+      options:['AI chatbot for customer support','Automated follow-ups & CRM flows','AI content generation','Workflow & back-office automation','Analytics & reporting dashboards','None of the above']
+    },
+    {
+      id:'marketing',
+      label:'Marketing & Ads',
+      q:'What marketing channels do you want to activate?',
+      type:'multi',
+      hint:'Select all that apply',
+      options:['SEO (organic search)','Paid ads (Google / Meta)','Social media management','Content creation (blog, video, copy)','Email / WhatsApp campaigns','None for now']
+    },
+    {
+      id:'timeline',
+      label:'Timeline & Management',
+      q:'What is your expected launch timeline and involvement?',
+      type:'single',
+      options:['ASAP — within 4 weeks','1–3 months, collaborative build','3–6 months, full-service managed','Flexible — quality over speed']
+    }
+  ];
+
+  var answers = {};
+  var ALL_SERVICES = ['Website','Brand Identity','E-Commerce','Booking','CRM','SEO','Social Media','Paid Ads','AI Chatbot','Workflow Automation','Content Creation','Analytics Dashboard'];
+  var selectedServices = [];
+
+  function buildSteps(){
+    var container = document.getElementById('nbs-steps');
+    container.innerHTML = '';
+    steps.forEach(function(s,i){
+      var div = document.createElement('div');
+      div.id = 'nbs-step-'+i;
+      div.style.cssText = 'display:none;animation:nbsFadeIn 0.35s ease;';
+      var html = '<p style="font-size:12px;font-weight:700;letter-spacing:0.08em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin:0 0 10px;">Step '+(i+1)+' of '+steps.length+'</p>';
+      html += '<h3 style="font-size:26px;font-weight:700;color:#fff;margin:0 0 8px;letter-spacing:-0.02em;line-height:1.3;">'+s.q+'</h3>';
+      if(s.hint) html += '<p style="font-size:13px;color:rgba(255,255,255,0.35);margin:0 0 28px;">'+s.hint+'</p>';
+      else html += '<div style="height:28px;"></div>';
+      html += '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:40px;" id="nbs-opts-'+i+'">';
+      s.options.forEach(function(opt,oi){
+        html += '<button onclick="nbsToggle('+i+','+oi+')" id="nbs-opt-'+i+'-'+oi+'" data-val="'+opt+'" style="'+pillStyle(false)+'">'+opt+'</button>';
+      });
+      html += '</div>';
+      html += '<div style="display:flex;gap:12px;flex-wrap:wrap;">';
+      if(i>0) html += '<button onclick="nbsBack('+i+')" style="background:none;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:14px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;font-family:\'Inter Tight\',sans-serif;transition:all 0.2s;">← Back</button>';
+      html += '<button onclick="nbsNext('+i+')" id="nbs-next-'+i+'" style="'+btnStyle()+'">'+(i===steps.length-1?'See my package →':'Next →')+'</button>';
+      html += '</div>';
+      div.innerHTML = html;
+      container.appendChild(div);
+    });
+  }
+
+  function pillStyle(active){
+    if(active) return 'background:#ffbd59;color:#060612;border:1.5px solid #ffbd59;font-size:14px;font-weight:600;padding:10px 20px;border-radius:100px;cursor:pointer;font-family:\'Inter Tight\',sans-serif;transition:all 0.2s;';
+    return 'background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.75);border:1.5px solid rgba(255,255,255,0.12);font-size:14px;font-weight:600;padding:10px 20px;border-radius:100px;cursor:pointer;font-family:\'Inter Tight\',sans-serif;transition:all 0.2s;';
+  }
+
+  function btnStyle(){
+    return 'background:#ffbd59;color:#060612;font-size:15px;font-weight:700;padding:12px 28px;border-radius:10px;border:none;cursor:pointer;font-family:\'Inter Tight\',sans-serif;transition:opacity 0.2s;';
+  }
+
+  var current = 0;
+
+  function showStep(i){
+    steps.forEach(function(_,j){ document.getElementById('nbs-step-'+j).style.display='none'; });
+    document.getElementById('nbs-step-'+i).style.display='block';
+    var pct = Math.round((i/steps.length)*100);
+    document.getElementById('nbs-progress-bar').style.width = pct+'%';
+    document.getElementById('nbs-step-label').textContent = steps[i].label;
+    document.getElementById('nbs-step-pct').textContent = pct+'%';
+    current = i;
+    restoreSelections(i);
+  }
+
+  function restoreSelections(i){
+    var s = steps[i];
+    var saved = answers[s.id] || (s.type==='multi'?[]:'');
+    s.options.forEach(function(opt,oi){
+      var btn = document.getElementById('nbs-opt-'+i+'-'+oi);
+      if(!btn) return;
+      var active = s.type==='multi' ? saved.indexOf(opt)>-1 : saved===opt;
+      btn.style.cssText = pillStyle(active);
+    });
+  }
+
+  window.nbsToggle = function(si,oi){
+    var s = steps[si];
+    var val = s.options[oi];
+    if(s.type==='single'){
+      answers[s.id] = val;
+      s.options.forEach(function(_,j){
+        var b = document.getElementById('nbs-opt-'+si+'-'+j);
+        b.style.cssText = pillStyle(j===oi);
+      });
+    } else {
+      if(!answers[s.id]) answers[s.id]=[];
+      var idx = answers[s.id].indexOf(val);
+      if(idx>-1) answers[s.id].splice(idx,1);
+      else answers[s.id].push(val);
+      var btn = document.getElementById('nbs-opt-'+si+'-'+oi);
+      btn.style.cssText = pillStyle(answers[s.id].indexOf(val)>-1);
+    }
+  };
+
+  window.nbsNext = function(i){
+    var s = steps[i];
+    var ans = answers[s.id];
+    var valid = s.type==='multi' ? (ans && ans.length>0) : !!ans;
+    if(!valid){ alert('Please select at least one option to continue.'); return; }
+    if(i<steps.length-1){ showStep(i+1); }
+    else { showResults(); }
+  };
+
+  window.nbsBack = function(i){ showStep(i-1); };
+
+  function showResults(){
+    document.getElementById('nbs-steps').style.display='none';
+    document.getElementById('nbs-progress-wrap').style.display='none';
+    document.getElementById('nbs-results').style.display='block';
+    document.getElementById('nbs-progress-bar').style.width='100%';
+
+    var pkg = computePackage();
+    document.getElementById('nbs-pkg-name').textContent = pkg.name;
+    document.getElementById('nbs-pkg-desc').textContent = pkg.desc;
+    selectedServices = pkg.services.slice();
+    renderServicePills();
+
+    var waMsg = encodeURIComponent('Hi NBS! I just used your Package Builder and got the '+pkg.name+' package. I\'d love to discuss: '+selectedServices.join(', '));
+    document.getElementById('nbs-wa-btn').href = 'https://wa.me/96181315097?text='+waMsg;
+  }
+
+  function computePackage(){
+    var score = 0;
+    var services = [];
+
+    // Brand
+    var brand = answers['brand']||'';
+    if(brand==='No brand yet — starting from scratch'){ services.push('Brand Identity'); score+=1; }
+    else if(brand==='Have a logo, need the full identity'){ services.push('Brand Identity'); score+=1; }
+
+    // Platform
+    var platform = answers['platform']||[];
+    if(platform.indexOf('Informational website')>-1||platform.indexOf('Mobile app')>-1){ services.push('Website'); score+=1; }
+    if(platform.indexOf('E-commerce store')>-1){ services.push('E-Commerce'); score+=2; }
+    if(platform.indexOf('Online booking / scheduling')>-1){ services.push('Booking'); score+=2; }
+    if(platform.indexOf('Customer portal / CRM')>-1){ services.push('CRM'); score+=2; }
+
+    // AI
+    var ai = answers['ai']||[];
+    if(ai.indexOf('AI chatbot for customer support')>-1){ services.push('AI Chatbot'); score+=2; }
+    if(ai.indexOf('Workflow & back-office automation')>-1||ai.indexOf('Automated follow-ups & CRM flows')>-1){ services.push('Workflow Automation'); score+=2; }
+    if(ai.indexOf('Analytics & reporting dashboards')>-1){ services.push('Analytics Dashboard'); score+=2; }
+
+    // Marketing
+    var mkt = answers['marketing']||[];
+    if(mkt.indexOf('SEO (organic search)')>-1){ services.push('SEO'); score+=1; }
+    if(mkt.indexOf('Paid ads (Google / Meta)')>-1){ services.push('Paid Ads'); score+=1; }
+    if(mkt.indexOf('Social media management')>-1){ services.push('Social Media'); score+=1; }
+    if(mkt.indexOf('Content creation (blog, video, copy)')>-1){ services.push('Content Creation'); score+=1; }
+
+    // Dedupe
+    services = services.filter(function(v,i,a){ return a.indexOf(v)===i; });
+
+    var name,desc;
+    if(score<=3){ name='Starter'; desc='A focused launch package to establish your digital presence with the essentials that matter most right now.'; }
+    else if(score<=6){ name='Growth'; desc='A balanced package combining digital infrastructure with marketing and automation to accelerate your growth.'; }
+    else if(score<=9){ name='Pro'; desc='A comprehensive suite for businesses ready to scale — combining advanced platforms, AI, and full-stack marketing.'; }
+    else { name='Enterprise'; desc='A fully managed, end-to-end digital ecosystem built for high-growth businesses with complex operational needs.'; }
+
+    return {name:name,desc:desc,services:services};
+  }
+
+  function renderServicePills(){
+    var container = document.getElementById('nbs-pkg-services');
+    container.innerHTML='';
+    ALL_SERVICES.forEach(function(svc){
+      var active = selectedServices.indexOf(svc)>-1;
+      var btn = document.createElement('button');
+      btn.textContent = (active?'✓ ':'')+svc;
+      btn.style.cssText = active
+        ? 'background:#ffbd59;color:#060612;border:1.5px solid #ffbd59;font-size:13px;font-weight:700;padding:9px 18px;border-radius:100px;cursor:pointer;font-family:\'Inter Tight\',sans-serif;transition:all 0.2s;'
+        : 'background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.4);border:1.5px solid rgba(255,255,255,0.1);font-size:13px;font-weight:600;padding:9px 18px;border-radius:100px;cursor:pointer;font-family:\'Inter Tight\',sans-serif;transition:all 0.2s;';
+      btn.onclick = function(){
+        var idx = selectedServices.indexOf(svc);
+        if(idx>-1) selectedServices.splice(idx,1);
+        else selectedServices.push(svc);
+        renderServicePills();
+        var waMsg = encodeURIComponent('Hi NBS! I just used your Package Builder. I\'d love to discuss: '+selectedServices.join(', '));
+        document.getElementById('nbs-wa-btn').href = 'https://wa.me/96181315097?text='+waMsg;
+      };
+      container.appendChild(btn);
+    });
+  }
+
+  window.nbsSurveyReset = function(){
+    answers={};selectedServices=[];
+    document.getElementById('nbs-results').style.display='none';
+    document.getElementById('nbs-steps').style.display='block';
+    document.getElementById('nbs-progress-wrap').style.display='block';
+    buildSteps();
+    showStep(0);
+  };
+
+  var style = document.createElement('style');
+  style.textContent = '@keyframes nbsFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
+  document.head.appendChild(style);
+
+  buildSteps();
+  showStep(0);
+})();
+</script>
+
+<!-- NBS SURVEY END -->
 </body>
 
 <!-- Mirrored from nextbigstrategyhome.framer.website/ by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 May 2026 21:39:08 GMT -->
