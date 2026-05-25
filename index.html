@@ -2,6 +2,72 @@
 <html lang="en" dir="ltr">
 <head>
 <style>em, i { font-style: normal !important; }</style>
+
+<!-- NBS MOBILE FIX START -->
+<style>
+/* ─── Mobile nav: hide links, collapse CTA ─── */
+@media (max-width: 767px) {
+  #nbs-nav .nbs-links { display: none; }
+  #nbs-nav .nbs-nav-inner { padding: 0 20px; }
+  #nbs-nav .nbs-cta { padding: 8px 16px; font-size: 13px; }
+}
+
+/* ─── Show testimonials slider on mobile ─── */
+/* Framer hides .hidden-s5n491 on mobile – override for testimonials */
+@media (max-width: 809.98px) {
+  .framer-1wndsya-container.hidden-s5n491 {
+    display: block !important;
+    width: 100% !important;
+  }
+  /* SSR slider: reset Framer's initial invisible state */
+  .framer-1wndsya-container section {
+    opacity: 1 !important;
+    user-select: auto !important;
+  }
+  /* Each slide card: visible + mobile width */
+  .framer-1wndsya-container li {
+    display: block !important;
+  }
+  .framer-1t5kr8c-container {
+    visibility: visible !important;
+    width: 82vw !important;
+    height: auto !important;
+    min-height: 220px !important;
+  }
+  /* Inner card wrap */
+  .framer-1wndsya-container ul {
+    gap: 16px !important;
+    cursor: grab;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 24px;
+  }
+  .framer-1wndsya-container ul li > div {
+    scroll-snap-align: start;
+  }
+}
+
+/* ─── Framer body offset for fixed nav (all screen sizes) ─── */
+[data-framer-root] > div:first-child,
+.framer-JgsiI.framer-72rtr7 {
+  padding-top: 0 !important;
+}
+
+/* ─── Survey: mobile padding ─── */
+@media (max-width: 600px) {
+  #nbs-survey > div { padding: 0 20px; }
+  #nbs-survey h2 { font-size: 36px !important; }
+}
+
+/* ─── Footer: mobile layout ─── */
+@media (max-width: 600px) {
+  #nbs-footer > div { padding: 0 20px; }
+  #nbs-footer > div > div:first-child { flex-direction: column; gap: 32px; }
+}
+</style>
+<!-- NBS MOBILE FIX END -->
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 	<title>Next Big Strategy — Creative Digital Agency</title>
