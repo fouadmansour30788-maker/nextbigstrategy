@@ -83,7 +83,12 @@
     <meta name="twitter:description" content="We design strategies that move brands. Web design, digital marketing, branding, and automation — from Beirut to the world.">
     <!-- Hide Framer badge + Framer nav -->
     <style>
-      #__framer-badge-container { display: none !important; }
+      #__framer-badge-container,
+      .__framer-badge,
+      [class*="__framer-badge"],
+      [data-framer-name="Light"],
+      [data-framer-name="Dark"],
+      .framer-lib-cursors-host { display: none !important; visibility: hidden !important; pointer-events: none !important; opacity: 0 !important; }
 
       /* Hide the Framer-generated nav */
       .framer-1l1eefv-container { display: none !important; }
@@ -350,6 +355,35 @@
     <!-- End of headEnd -->
 </head>
 <body>
+<!-- NBS CLEANUP START -->
+<script>
+(function() {
+  function removeFramerJunk() {
+    // Remove Framer badge
+    var badge = document.getElementById('__framer-badge-container');
+    if (badge) badge.remove();
+    // Remove any element linking to framer.com
+    document.querySelectorAll('a[href*="framer.com"].__framer-badge, a.__framer-badge').forEach(function(el){ el.closest('#__framer-badge-container') ? el.closest('#__framer-badge-container').remove() : el.remove(); });
+    // Remove Framer cursors overlay
+    document.querySelectorAll('[data-framer-cursor],.framer-cursor-host').forEach(function(el){ el.remove(); });
+  }
+  // Run immediately
+  removeFramerJunk();
+  // Also watch for Framer JS re-creating it
+  var obs = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      m.addedNodes.forEach(function(node) {
+        if (node.id === '__framer-badge-container') { node.remove(); return; }
+        if (node.querySelector && node.querySelector('#__framer-badge-container')) { node.querySelector('#__framer-badge-container').remove(); }
+        if (node.classList && (node.classList.contains('__framer-badge') || node.href && node.href.includes('framer.com'))) { node.remove(); }
+      });
+    });
+  });
+  obs.observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
+<!-- NBS CLEANUP END -->
+
 <nav id="nbs-nav">
   <div class="nbs-nav-inner">
     <a href="#" class="nbs-logo">Next Big Strategy</a>
