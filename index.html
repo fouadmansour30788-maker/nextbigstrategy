@@ -392,6 +392,17 @@ and enhance customer experience.</p></div></div><div class="framer-94awl0" data-
 	<!-- Start of bodyEnd -->
     
     <!-- End of bodyEnd -->
+<script>
+// Force correct title after Framer JS overrides it
+(function() {
+  var correct = 'Next Big Strategy — Creative Digital Agency';
+  document.title = correct;
+  var obs = new MutationObserver(function() {
+    if (document.title !== correct) document.title = correct;
+  });
+  obs.observe(document.querySelector('title') || document.head, { subtree: true, childList: true, characterData: true });
+})();
+</script>
 </body>
 
 <!-- Mirrored from nextbigstrategyhome.framer.website/ by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 May 2026 21:39:08 GMT -->
