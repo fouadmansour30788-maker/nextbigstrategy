@@ -1,6 +1,27 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
+<!-- NBS FRAMER BLOCK START -->
+<script>
+// Disable Framer's edit overlay and highlight system before Framer JS loads
+window.__framer_importFromPackage = function() { return function() {}; };
+// Stub out the Framer preview/editor bridge
+window.__framer_events = { track: function(){}, page: function(){} };
+// Kill any postMessage-based editor communication
+var _origAddEventListener = window.addEventListener.bind(window);
+window.addEventListener = function(type, fn, opts) {
+  if (type === 'message') {
+    var wrapped = function(e) {
+      try { if (e.origin && e.origin.includes('framer.com')) return; } catch(ex) {}
+      fn.call(this, e, opts);
+    };
+    return _origAddEventListener(type, wrapped, opts);
+  }
+  return _origAddEventListener(type, fn, opts);
+};
+</script>
+<!-- NBS FRAMER BLOCK END -->
+
 <style>em, i { font-style: normal !important; }</style>
 
 <!-- NBS MOBILE FIX START -->
@@ -402,7 +423,7 @@
     <a href="#contact" class="nbs-cta">Discuss your project</a>
   </div>
 </nav>
-	<script async src="https://events.framer.com/script?v=2" data-fid="56728bf8b9fbaf2a03b34a38fbc47aa6584ccf2bc1ce1db81e708970b1314444" data-no-nt></script>
+	
 	<!-- Start of bodyStart -->
     
     <!-- End of bodyStart -->
