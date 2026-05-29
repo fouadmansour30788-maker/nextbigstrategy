@@ -202,6 +202,105 @@ body {
 </style>
 <!-- NBS DARK THEME END -->
 
+<!-- NBS POLISH START -->
+<style id="nbs-polish">
+/* ── Global scroll + easing tokens ── */
+html { scroll-behavior: smooth; }
+
+:root {
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* ── Nav scroll state ── */
+#nbs-nav {
+  transition: background 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
+}
+#nbs-nav.nbs-nav-scrolled {
+  background: rgba(6, 6, 18, 0.88) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+.nbs-logo { cursor: pointer; }
+.nbs-cta {
+  transition: filter 0.18s var(--ease-out), transform 0.16s var(--ease-out) !important;
+}
+.nbs-cta:hover  { filter: brightness(1.1); }
+.nbs-cta:active { transform: scale(0.96) !important; }
+
+/* ── Footer social icons — CSS hover only ── */
+.nbs-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out), transform 0.16s var(--ease-out);
+}
+.nbs-social-btn:hover  { background: #ffbd59; border-color: #ffbd59; }
+.nbs-social-btn:active { transform: scale(0.92); }
+
+/* ── FAQ polish ── */
+.nbs-faq-btn { transition: opacity 0.15s var(--ease-out); }
+.nbs-faq-btn:hover .nbs-faq-q { color: #fff !important; }
+.nbs-faq-arrow {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.4);
+  transition: transform 0.28s var(--ease-out), color 0.2s var(--ease-out);
+}
+.nbs-faq-arrow.open { transform: rotate(180deg); color: #ffbd59; }
+.nbs-faq-answer {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.38s var(--ease-out), opacity 0.28s var(--ease-out);
+}
+.nbs-faq-answer.open { opacity: 1; }
+
+/* ── Survey polish ── */
+#nbs-progress-bar { transition: width 0.45s var(--ease-out) !important; }
+
+@keyframes nbsFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes nbsShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60%  { transform: translateX(-5px); }
+  40%, 80%  { transform: translateX(5px); }
+}
+
+.nbs-step-wrap { animation: nbsFadeIn 0.3s var(--ease-out) both; }
+
+button[id^="nbs-opt-"]:active,
+button[id^="nbs-next-"]:active,
+#nbs-results button:active { transform: scale(0.97); }
+
+.nbs-inline-error {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 107, 107, 0.9);
+  margin-top: 4px;
+  animation: nbsShake 0.38s var(--ease-out);
+}
+</style>
+<!-- NBS POLISH END -->
+
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
@@ -537,6 +636,14 @@ body {
     <a href="#contact" class="nbs-cta">Discuss your project</a>
   </div>
 </nav>
+<script>
+(function(){
+  var nav = document.getElementById('nbs-nav');
+  function onScroll(){ nav.classList.toggle('nbs-nav-scrolled', window.scrollY > 24); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
 	
 	<!-- Start of bodyStart -->
     
@@ -597,24 +704,37 @@ and enhance customer experience.</p></div></div><div class="framer-94awl0" data-
     }
   ];
 
+  var CHEVRON = '<svg class="nbs-faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
   var list = document.getElementById('nbs-faq-list');
   faqs.forEach(function(faq, i) {
     var item = document.createElement('div');
     item.style.cssText = 'border-bottom:1px solid rgba(255,255,255,0.08);' + (i===0?'border-top:1px solid rgba(255,255,255,0.08);':'');
-    item.innerHTML = '<button onclick="nbsFaqToggle(this)" style="display:flex;align-items:center;gap:20px;padding:24px 0;background:none;border:none;cursor:pointer;width:100%;text-align:left;font-family:Inter Tight,sans-serif;"><span style="font-size:12px;font-weight:700;color:#ffbd59;letter-spacing:0.06em;flex-shrink:0;">'+(String(i+1).padStart(2,'0'))+'</span><span style="font-size:16px;font-weight:600;color:rgba(255,255,255,0.85);flex:1;line-height:1.4;">'+faq.q.replace(/^d+.s*/,'')+'</span><span class="nbs-arrow" style="font-size:18px;color:rgba(255,255,255,0.45);transition:transform 0.3s;">↓</span></button><div class="nbs-answer" style="overflow:hidden;max-height:0;transition:max-height 0.3s ease;"><p style="font-size:15px;line-height:1.75;color:rgba(255,255,255,0.45);padding:0 0 24px 40px;font-family:Inter Tight,sans-serif;">'+faq.a+'</p></div>';
+    var qText = faq.q.replace(/^\d+\.\s*/, '');
+    item.innerHTML =
+      '<button class="nbs-faq-btn" onclick="nbsFaqToggle(this)" aria-expanded="false" style="display:flex;align-items:center;gap:20px;padding:24px 0;background:none;border:none;cursor:pointer;width:100%;text-align:left;font-family:\'Inter Tight\',sans-serif;">' +
+        '<span style="font-size:12px;font-weight:700;color:#ffbd59;letter-spacing:0.06em;flex-shrink:0;">' + String(i+1).padStart(2,'0') + '</span>' +
+        '<span class="nbs-faq-q" style="font-size:16px;font-weight:600;color:rgba(255,255,255,0.92);flex:1;line-height:1.4;transition:color 0.2s var(--ease-out);">' + qText + '</span>' +
+        CHEVRON +
+      '</button>' +
+      '<div class="nbs-faq-answer" role="region">' +
+        '<p style="font-size:15px;line-height:1.75;color:rgba(255,255,255,0.62);padding:0 0 24px 40px;font-family:\'Inter Tight\',sans-serif;margin:0;">' + faq.a + '</p>' +
+      '</div>';
     list.appendChild(item);
   });
 
   window.nbsFaqToggle = function(btn) {
     var answer = btn.nextElementSibling;
-    var arrow = btn.querySelector('.nbs-arrow');
-    var isOpen = answer.style.maxHeight !== '0px' && answer.style.maxHeight !== '';
-    // Close all
-    document.querySelectorAll('.nbs-answer').forEach(function(a){ a.style.maxHeight='0'; });
-    document.querySelectorAll('.nbs-arrow').forEach(function(a){ a.style.transform=''; });
+    var arrow  = btn.querySelector('.nbs-faq-arrow');
+    var isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.nbs-faq-answer').forEach(function(a){ a.style.maxHeight='0'; a.classList.remove('open'); });
+    document.querySelectorAll('.nbs-faq-arrow').forEach(function(a){ a.classList.remove('open'); });
+    document.querySelectorAll('.nbs-faq-btn').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
     if(!isOpen) {
       answer.style.maxHeight = answer.scrollHeight + 'px';
-      arrow.style.transform = 'rotate(180deg)';
+      answer.classList.add('open');
+      arrow.classList.add('open');
+      btn.setAttribute('aria-expanded','true');
     }
   };
 })();
@@ -757,18 +877,20 @@ and enhance customer experience.</p></div></div><div class="framer-94awl0" data-
     steps.forEach(function(s,i){
       var div = document.createElement('div');
       div.id = 'nbs-step-'+i;
-      div.style.cssText = 'display:none;animation:nbsFadeIn 0.35s ease;';
+      div.className = 'nbs-step-wrap';
+      div.style.cssText = 'display:none;';
       var html = '<p style="font-size:12px;font-weight:700;letter-spacing:0.08em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin:0 0 10px;">Step '+(i+1)+' of '+steps.length+'</p>';
       html += '<h3 style="font-size:26px;font-weight:700;color:#fff;margin:0 0 8px;letter-spacing:-0.02em;line-height:1.3;">'+s.q+'</h3>';
       if(s.hint) html += '<p style="font-size:13px;color:rgba(255,255,255,0.35);margin:0 0 28px;">'+s.hint+'</p>';
       else html += '<div style="height:28px;"></div>';
-      html += '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:40px;" id="nbs-opts-'+i+'">';
+      html += '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;" id="nbs-opts-'+i+'">';
       s.options.forEach(function(opt,oi){
         html += '<button onclick="nbsToggle('+i+','+oi+')" id="nbs-opt-'+i+'-'+oi+'" data-val="'+opt+'" style="'+pillStyle(false)+'">'+opt+'</button>';
       });
       html += '</div>';
-      html += '<div style="display:flex;gap:12px;flex-wrap:wrap;">';
-      if(i>0) html += '<button onclick="nbsBack('+i+')" style="background:none;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:14px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;font-family:\'Inter Tight\',sans-serif;transition:all 0.2s;">← Back</button>';
+      html += '<div id="nbs-err-'+i+'" aria-live="polite"></div>';
+      html += '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;">';
+      if(i>0) html += '<button onclick="nbsBack('+i+')" style="background:none;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:14px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;font-family:\'Inter Tight\',sans-serif;transition:color 0.2s,border-color 0.2s;">← Back</button>';
       html += '<button onclick="nbsNext('+i+')" id="nbs-next-'+i+'" style="'+btnStyle()+'">'+(i===steps.length-1?'See my package →':'Next →')+'</button>';
       html += '</div>';
       div.innerHTML = html;
@@ -789,7 +911,11 @@ and enhance customer experience.</p></div></div><div class="framer-94awl0" data-
 
   function showStep(i){
     steps.forEach(function(_,j){ document.getElementById('nbs-step-'+j).style.display='none'; });
-    document.getElementById('nbs-step-'+i).style.display='block';
+    var el = document.getElementById('nbs-step-'+i);
+    el.style.display='block';
+    el.style.animation='none';
+    el.offsetHeight; /* reflow */
+    el.style.animation='';
     var pct = Math.round((i/steps.length)*100);
     document.getElementById('nbs-progress-bar').style.width = pct+'%';
     document.getElementById('nbs-step-label').textContent = steps[i].label;
@@ -832,7 +958,12 @@ and enhance customer experience.</p></div></div><div class="framer-94awl0" data-
     var s = steps[i];
     var ans = answers[s.id];
     var valid = s.type==='multi' ? (ans && ans.length>0) : !!ans;
-    if(!valid){ alert('Please select at least one option to continue.'); return; }
+    var errEl = document.getElementById('nbs-err-'+i);
+    if(!valid){
+      errEl.innerHTML = '<p class="nbs-inline-error">Please select at least one option to continue.</p>';
+      return;
+    }
+    errEl.innerHTML = '';
     if(i<steps.length-1){ showStep(i+1); }
     else { showResults(); }
   };
@@ -955,27 +1086,27 @@ and enhance customer experience.</p></div></div><div class="framer-94awl0" data-
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
 
           <!-- LinkedIn -->
-          <a href="https://www.linkedin.com/company/110273918" target="_blank" rel="noopener" aria-label="LinkedIn" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:all 0.2s;text-decoration:none;" onmouseover="this.style.background='#ffbd59';this.style.borderColor='#ffbd59'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
+          <a href="https://www.linkedin.com/company/110273918" target="_blank" rel="noopener" aria-label="LinkedIn" class="nbs-social-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="9" width="4" height="12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="4" r="2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
 
           <!-- Instagram -->
-          <a href="https://www.instagram.com/nextbigstrategy?igsh=MThweml3YmxobWh3cg==" target="_blank" rel="noopener" aria-label="Instagram" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:all 0.2s;text-decoration:none;" onmouseover="this.style.background='#ffbd59';this.style.borderColor='#ffbd59'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
+          <a href="https://www.instagram.com/nextbigstrategy?igsh=MThweml3YmxobWh3cg==" target="_blank" rel="noopener" aria-label="Instagram" class="nbs-social-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
 
           <!-- WhatsApp -->
-          <a href="https://wa.me/+96181315097" target="_blank" rel="noopener" aria-label="WhatsApp" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:all 0.2s;text-decoration:none;" onmouseover="this.style.background='#ffbd59';this.style.borderColor='#ffbd59'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
+          <a href="https://wa.me/+96181315097" target="_blank" rel="noopener" aria-label="WhatsApp" class="nbs-social-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           </a>
 
           <!-- TikTok -->
-          <a href="https://www.tiktok.com/@nextbigstrategy" target="_blank" rel="noopener" aria-label="TikTok" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:all 0.2s;text-decoration:none;" onmouseover="this.style.background='#ffbd59';this.style.borderColor='#ffbd59'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
+          <a href="https://www.tiktok.com/@nextbigstrategy" target="_blank" rel="noopener" aria-label="TikTok" class="nbs-social-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
           </a>
 
           <!-- Facebook -->
-          <a href="https://www.facebook.com/share/1HCGVk9rBQ/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:all 0.2s;text-decoration:none;" onmouseover="this.style.background='#ffbd59';this.style.borderColor='#ffbd59'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.1)'">
+          <a href="https://www.facebook.com/share/1HCGVk9rBQ/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="nbs-social-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
 
